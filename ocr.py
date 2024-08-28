@@ -40,9 +40,5 @@ def get_text_from_image(image_url):
     text = ""
     for i in response.json()['images'][0]['fields']:
         text = text + " " + i['inferText']
-    print(text)
-    
+        
     return text
-
-if __name__ == "__main__":
-    get_text_from_image("ddanzi-storage/test1-1.png")
