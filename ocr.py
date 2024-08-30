@@ -40,5 +40,4 @@ def get_text_from_image(image_url):
     text = ""
     for i in response.json()['images'][0]['fields']:
         text = text + " " + i['inferText']
-        
     return text
