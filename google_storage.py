@@ -24,8 +24,6 @@ def upload_gcs(enhance_image):
     return "https://storage.googleapis.com/" + bucket_name + "/" + enhance_image
 
 
-
-
 # Download image to Google Cloud Storage
 def download_gcs(image): 
     parsed = urlparse(image)
