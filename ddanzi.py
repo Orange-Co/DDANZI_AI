@@ -2,25 +2,16 @@ from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from database import engineconn, get_db
+from database import get_db
+from cache import load_product_data, invalidate_cache
 from google_storage import download_gcs
 from ocr import get_text_from_image
 from calculate_similarity import get_most_similar_index
-from model import Product
-
 
 app = FastAPI()
 
-engine = engineconn()
-session = engine.sessionmaker()
-
 class Image(BaseModel): 
     image_url: str
-
-@app.get("/db")
-async def dbTest():
-    example = session.query(Product).all()
-    return example
 
 
 @app.post("/test/image")
@@ -31,9 +22,8 @@ def gcs_test(image: Image):
 
 @app.post("/api/v1/image")
 async def cal_most_similar_prod(image: Image, db: Session = Depends(get_db)):
-    #042370524
-    products = db.query(Product.product_id, Product.origin_name).all()
-    data = [{"product_id": prod.product_id, "origin_name": prod.origin_name} for prod in products]
+    # 캐싱된 데이터 로드
+    data = load_product_data(db)
     
     # 이미지 다운로드
     image = download_gcs(image.image_url)
@@ -51,3 +41,10 @@ async def cal_most_similar_prod(image: Image, db: Session = Depends(get_db)):
     product_id =  data[most_similar_index]['product_id']
 
     return {"productId": product_id}
+
+
+# 캐시 무효화 
+@app.post("/api/v1/cache/invalidate")
+def cache_invalidate():
+    invalidate_cache()
+    return {"message": "캐시가 성공적으로 무효화되었습니다."}
