@@ -1,23 +1,27 @@
 import pandas as pd
-import logging
 from urllib.parse import unquote
 from pydantic import BaseModel
 from fastapi import FastAPI
+from database import engineconn
 
 from google_storage import download_gcs
 from ocr import get_text_from_image
 from calculate_similarity import get_most_similar_index
-
+from model import Product
 
 app = FastAPI()
+
+engine = engineconn()
+session = engine.sessionmaker()
 
 class Image(BaseModel): 
     image_url: str
 
+@app.get("/db")
+async def dbTest():
+    example = session.query(Product).all()
+    return example
 
-@app.get("/")
-async def test():
-    return {"message": "Hello World"}
 
 @app.post("/test/image")
 def gcs_test(image: Image):
