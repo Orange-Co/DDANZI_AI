@@ -21,7 +21,7 @@ def gcs_test(image: Image):
 
 
 @app.post("/api/v1/image")
-async def cal_most_similar_prod(image: Image, db: Session = Depends(get_db)):
+def cal_most_similar_prod(image: Image, db: Session = Depends(get_db)):
     # 캐싱된 데이터 로드
     data = load_product_data(db)
     
