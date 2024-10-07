@@ -4,7 +4,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
-DB_URL = os.getenv('DEVELOP_DB_URL')
+DB_URL = os.getenv('PRODUCTION_DB_URL')
 
 engine = create_engine(DB_URL, pool_recycle=500)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
