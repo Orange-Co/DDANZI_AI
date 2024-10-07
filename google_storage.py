@@ -1,7 +1,6 @@
 import os
 
 from google.cloud import storage
-from google.oauth2 import service_account
 
 import uuid
 from urllib.parse import urlparse
@@ -11,7 +10,7 @@ DOWNLOAD_DIR = 'ddanzi-storage'
 KEY_PATH = "data/key/inspiring-folio-437200-j6-86fdd3a21261.json"
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]= KEY_PATH
 
-bucket_name = 'ddanzi_bucket'    
+bucket_name = os.getenv('BUCKET')
 
 # Upload image to Google Cloud Storage
 def upload_gcs(enhance_image):
